@@ -189,4 +189,37 @@ public class Filtros {
        }
         return image; 
     }
+     public static Mat rotacion(Mat image,int g,double e){
+        double r =Math.toRadians(g);
+        Mat imagen1 =new Mat(image.rows(),image.cols(),image.type());
+        double x1,y1=0;
+        if(g<=90){
+            x1=image.rows()-imagen1.rows()*0.5/1;
+            y1=image.cols()-imagen1.cols()*0.5/0.5;
+        }else if(g<=180){
+            x1=image.rows()-imagen1.rows()*1/5;
+            y1=image.cols()-imagen1.cols()*1.5/3;
+        }else if(g<=270){
+            x1=image.rows()-imagen1.rows()*0.5/1;
+            y1=image.cols()-imagen1.cols()*1/5;
+        }else{
+            x1=image.rows()-imagen1.rows()*0.5/0.5;
+            y1=image.cols()-imagen1.cols()*0.5/1;
+        }
+           
+        for(int i=0;i<image.cols();i++){
+            for(int j=0;j<image.rows();j++){
+               double[] newSpec=image.get(j, i);
+              double x=(i*Math.cos(r))-(j*Math.sin(r));
+               x=x*e;
+               x=x+x1;
+               double y=(i*Math.sin(r))+(j*Math.cos(r));
+               y=y*e;
+               y=y+y1;
+               imagen1.put((int)(y), (int)(x), newSpec);   
+            }
+        }
+        return imagen1;
+    }
+    
 }

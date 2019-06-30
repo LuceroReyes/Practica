@@ -206,8 +206,7 @@ public class Filtros {
             x1=image.rows()-imagen1.rows()*0.5/0.5;
             y1=image.cols()-imagen1.cols()*0.5/1;
         }
-           
-        for(int i=0;i<image.cols();i++){
+       for(int i=0;i<image.cols();i++){
             for(int j=0;j<image.rows();j++){
                double[] newSpec=image.get(j, i);
               double x=(i*Math.cos(r))-(j*Math.sin(r));
@@ -220,6 +219,79 @@ public class Filtros {
             }
         }
         return imagen1;
+    }
+    public static Mat rotaciones(Mat image,int g,double e){
+        double r =Math.toRadians(g);
+        Mat imagen1 =new Mat(image.rows(),image.cols(),image.type());
+        double x0=0;
+        double y0=0;
+        if(g==0){
+            x0=image.rows()-imagen1.rows()*0.5/7;
+            y0=image.cols()-imagen1.cols()*0.5/7;
+        }else if(g==30){
+            x0=image.rows()-imagen1.rows()*7.7/3;
+            y0=image.cols()-imagen1.cols()*0.4/0.5;
+        }else if(g==45){
+            x0=image.rows()-imagen1.rows()*7.5/3;
+            y0=image.cols()-imagen1.cols()*0.4/0.5;
+        }else if(g==60){
+            x0=image.rows()-imagen1.rows()*7.2/3;
+            y0=image.cols()-imagen1.cols()*0.4/0.5;
+        }else if(g==90){
+            x0=image.rows()-imagen1.rows()*1/4;
+            y0=image.cols()-imagen1.cols()*1.5/2;
+        }else if(g==120){
+            x0=image.rows()-imagen1.rows()*5.7/5;
+            y0=image.cols()-imagen1.cols()*4/7;
+        }else if(g==135){
+            x0=image.rows()-imagen1.rows()*5.5/5;
+            y0=image.cols()-imagen1.cols()*4/7;
+        }else if(g==150){
+            x0=image.rows()-imagen1.rows()*6/5;
+            y0=image.cols()-imagen1.cols()*3/7;
+        }else if(g==180){
+            x0=image.rows()-imagen1.rows()*6/5;
+            y0=image.cols()-imagen1.cols()*2/7;
+        }else if(g==210){
+            x0=image.rows()-imagen1.rows()*7/5;
+            y0=image.cols()-imagen1.cols()*2/9;
+        }else if(g==225){
+            x0=image.rows()-imagen1.rows()*7/5;
+            y0=image.cols()-imagen1.cols()*2/10;
+        }else if(g==240){
+            x0=image.rows()-imagen1.rows()*3/5;
+            y0=image.cols()-imagen1.cols()*1/7;
+        }else if(g==270){
+            x0=image.rows()-imagen1.rows()*3.7/5;
+            y0=image.cols()-imagen1.cols()*1/4;
+        }else if(g==300){
+            x0=image.rows()-imagen1.rows()*4/5;
+            y0=image.cols()-imagen1.cols()*1/2.5;
+        }else if(g==315){
+            x0=image.rows()-imagen1.rows()*4/5;
+            y0=image.cols()-imagen1.cols()*1/2;
+        }else if(g==330){
+            x0=image.rows()-imagen1.rows()*4/5;
+            y0=image.cols()-imagen1.cols()*1/1.7;
+        }else{
+            x0=image.rows()-imagen1.rows()*3/4;
+            y0=image.cols()-imagen1.cols()*0.75/1;
+        }
+            
+        for(int i=0;i<image.cols();i++){
+            for(int j=0;j<image.rows();j++){
+               double[] newSpec=image.get(j, i);
+              double x=(i*Math.cos(r))-(j*Math.sin(r));
+               x=x*e;
+               x=x+x0;
+               double y=(i*Math.sin(r))+(j*Math.cos(r));
+               y=y*e;
+               y=y+y0;
+               imagen1.put((int)(y), (int)(x), newSpec);   
+            }
+        }
+        return imagen1;
+    
     }
     
 }

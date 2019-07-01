@@ -570,17 +570,17 @@ public class vista extends javax.swing.JFrame {
     private void rActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rActionPerformed
         // TODO add your handling code here:
         if(r.isSelected()){
-            /*String grados=gr.getSelectedItem().toString();
-            int gra=Integer.parseInt(grados);
-            String escala=es.getSelectedItem().toString();
-            double esc=Double.parseDouble(escala);
-            i=Filtros.rotacion(i, gra,esc);
-            setimagen(i,true);*/
             String grados=gr.getSelectedItem().toString();
             int gra=Integer.parseInt(grados);
             String escala=es.getSelectedItem().toString();
             double esc=Double.parseDouble(escala);
-            i=Filtros.rotaciones(i, gra,esc);
+            i=Filtros.rotacion(i, gra,esc);
+            
+            /*String grados=gr.getSelectedItem().toString();
+            int gra=Integer.parseInt(grados);
+            String escala=es.getSelectedItem().toString();
+            double esc=Double.parseDouble(escala)
+            i=Filtros.rotaciones(i, gra,esc);*/
             //i=Filtros.rotaciones(i,360);
             setimagen(i,true);
             Bin.setEnabled(false);

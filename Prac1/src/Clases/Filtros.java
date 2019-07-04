@@ -5,10 +5,16 @@
  */
 package Clases;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import org.jfree.ui.RefineryUtilities;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -220,78 +226,94 @@ public class Filtros {
         }
         return imagen1;
     }
-    public static Mat rotaciones(Mat image,int g,double e){
-        double r =Math.toRadians(g);
-        Mat imagen1 =new Mat(image.rows(),image.cols(),image.type());
-        double x0=0;
-        double y0=0;
-        if(g==0){
-            x0=image.rows()-imagen1.rows()*0.5/7;
-            y0=image.cols()-imagen1.cols()*0.5/7;
-        }else if(g==30){
-            x0=image.rows()-imagen1.rows()*7.7/3;
-            y0=image.cols()-imagen1.cols()*0.4/0.5;
-        }else if(g==45){
-            x0=image.rows()-imagen1.rows()*7.5/3;
-            y0=image.cols()-imagen1.cols()*0.4/0.5;
-        }else if(g==60){
-            x0=image.rows()-imagen1.rows()*7.2/3;
-            y0=image.cols()-imagen1.cols()*0.4/0.5;
-        }else if(g==90){
-            x0=image.rows()-imagen1.rows()*1/4;
-            y0=image.cols()-imagen1.cols()*1.5/2;
-        }else if(g==120){
-            x0=image.rows()-imagen1.rows()*5.7/5;
-            y0=image.cols()-imagen1.cols()*4/7;
-        }else if(g==135){
-            x0=image.rows()-imagen1.rows()*5.5/5;
-            y0=image.cols()-imagen1.cols()*4/7;
-        }else if(g==150){
-            x0=image.rows()-imagen1.rows()*6/5;
-            y0=image.cols()-imagen1.cols()*3/7;
-        }else if(g==180){
-            x0=image.rows()-imagen1.rows()*6/5;
-            y0=image.cols()-imagen1.cols()*2/7;
-        }else if(g==210){
-            x0=image.rows()-imagen1.rows()*7/5;
-            y0=image.cols()-imagen1.cols()*2/9;
-        }else if(g==225){
-            x0=image.rows()-imagen1.rows()*7/5;
-            y0=image.cols()-imagen1.cols()*2/10;
-        }else if(g==240){
-            x0=image.rows()-imagen1.rows()*3/5;
-            y0=image.cols()-imagen1.cols()*1/7;
-        }else if(g==270){
-            x0=image.rows()-imagen1.rows()*3.7/5;
-            y0=image.cols()-imagen1.cols()*1/4;
-        }else if(g==300){
-            x0=image.rows()-imagen1.rows()*4/5;
-            y0=image.cols()-imagen1.cols()*1/2.5;
-        }else if(g==315){
-            x0=image.rows()-imagen1.rows()*4/5;
-            y0=image.cols()-imagen1.cols()*1/2;
-        }else if(g==330){
-            x0=image.rows()-imagen1.rows()*4/5;
-            y0=image.cols()-imagen1.cols()*1/1.7;
-        }else{
-            x0=image.rows()-imagen1.rows()*3/4;
-            y0=image.cols()-imagen1.cols()*0.75/1;
-        }
-            
-        for(int i=0;i<image.cols();i++){
-            for(int j=0;j<image.rows();j++){
-               double[] newSpec=image.get(j, i);
-              double x=(i*Math.cos(r))-(j*Math.sin(r));
-               x=x*e;
-               x=x+x0;
-               double y=(i*Math.sin(r))+(j*Math.cos(r));
-               y=y*e;
-               y=y+y0;
-               imagen1.put((int)(y), (int)(x), newSpec);   
+    public static void histograma(Mat image){
+        double[] b=new double[256];
+        double[] g=new double[256];
+        double[] r=new double[256];
+        for(int i=0;i<image.rows();i++){
+            for(int j=0;j<image.cols();j++){
+               double[] newSpec=image.get(i, j);
+               b[(int)(newSpec[0])]++;
+               g[(int)(newSpec[1])]++;
+               r[(int)(newSpec[2])]++;
             }
         }
-        return imagen1;
-    
+        Clases.HistogramTest demo = new Clases.HistogramTest("Histograma",b,g,r);
+        demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
     }
+    public static Mat Sobel(Mat image) {
+        Mat grayImage = new Mat();
+        Mat detectedEdges = new Mat();
+        int ddepth = CvType.CV_16S;
+        Mat grad_x = new Mat();
+        Mat grad_y = new Mat();
+        Mat abs_grad_x = new Mat();
+        Mat abs_grad_y = new Mat();
+        Imgproc.cvtColor(image ,grayImage, Imgproc.COLOR_BGR2GRAY);
+       // Gradient X
+        Imgproc.Sobel(grayImage, grad_x, ddepth, 1, 0);
+        Core.convertScaleAbs(grad_x, abs_grad_x);
+        // Gradient Y
+        Imgproc.Sobel(grayImage, grad_y, ddepth, 0, 1);
+        Core.convertScaleAbs(grad_y, abs_grad_y);
+        // Total Gradient (approximate)
+        Core.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, detectedEdges);
     
+        return detectedEdges;
+
+    }
+    public static Mat Laplace(Mat image) {
+       Mat laplacian = new Mat();
+	Imgproc.Laplacian(image, laplacian, image.depth());
+	Core.convertScaleAbs(laplacian, laplacian);
+	return laplacian;
+
+    }
+    public static Mat Canny (Mat image) {
+        Mat canny =new Mat();
+        Imgproc.cvtColor (image, canny, Imgproc.COLOR_BGR2GRAY); 
+        Imgproc.Canny (image, canny, 10, 100, 3,true); 
+        return canny;
+
+    }
+    public static Mat transformada (Mat image) {
+        Mat canny =new Mat();
+        Imgproc.cvtColor (image, canny, Imgproc.COLOR_BGR2GRAY); 
+        Mat tra=new Mat();
+        canny.convertTo(tra,CvType.CV_32FC1);
+        ArrayList <Mat> matList=new ArrayList<Mat>();
+        matList.add(tra);
+        Mat zeroMat =Mat.zeros(tra.size(), CvType.CV_32F);
+        matList.add(zeroMat);
+        Mat complexImage= new Mat();
+        Core.merge(matList,complexImage);
+        Core.dft(complexImage,complexImage);
+        ArrayList <Mat>splitted = new ArrayList();
+        Core.split(complexImage, splitted);
+        Mat magnitude = new Mat();
+        Core.magnitude(splitted.get(0),splitted.get(1), magnitude);
+        Core.add(Mat.ones(magnitude.size(),CvType.CV_32F),magnitude, magnitude);
+        Core.log(magnitude, magnitude);
+        int cx=magnitude.cols()/2;
+        int cy=magnitude.rows()/2;
+       
+        Mat q0=new Mat(magnitude,new Rect(0,0,cx,cy));
+        Mat q1=new Mat (magnitude,new Rect(cx,0,cx,cy));
+        Mat q2=new Mat (magnitude, new Rect(0,cy,cx,cy));
+        Mat q3=new Mat (magnitude,new Rect (cx,cy,cx,cy));
+        Mat tmp=new Mat();
+        q0.copyTo(tmp);
+        q3.copyTo(q0);
+        tmp.copyTo(q3);
+        q1.copyTo(tmp);
+        q2.copyTo(q1);
+        tmp.copyTo(q2);
+        magnitude.convertTo(magnitude,CvType.CV_8UC1);
+        Core.normalize(magnitude,magnitude,0,255,Core.NORM_MINMAX,CvType.CV_8UC1);
+        return magnitude;
+        
+
+    }
 }

@@ -15,12 +15,13 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.jfree.chart.JFreeChart;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.*;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -31,10 +32,12 @@ public class vista extends javax.swing.JFrame {
     int level=0;
     JFileChooser seleci=new JFileChooser();
     File archivo;
-    
+    JFreeChart grafica;
+ 
     public vista() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         initComponents();
+        
     }
       private void setimagen(Mat image,boolean i ){
         Image loadedImage =toBuufferdImage(image);
@@ -92,6 +95,12 @@ public class vista extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         gr = new javax.swing.JComboBox<>();
         es = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        deri = new javax.swing.JCheckBox();
+        la = new javax.swing.JCheckBox();
+        can = new javax.swing.JCheckBox();
+        tra = new javax.swing.JCheckBox();
+        his = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -219,22 +228,51 @@ public class vista extends javax.swing.JFrame {
 
         es.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0.1", "0.2", "0.3", "0.4", "0.5" }));
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        jLabel5.setText("Transformación");
+        jLabel5.setToolTipText("");
+
+        deri.setText("Derivadas");
+        deri.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deriActionPerformed(evt);
+            }
+        });
+
+        la.setText(" Laplace");
+        la.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                laActionPerformed(evt);
+            }
+        });
+
+        can.setText("Canny");
+        can.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                canActionPerformed(evt);
+            }
+        });
+
+        tra.setText("Trasnformada");
+        tra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                traActionPerformed(evt);
+            }
+        });
+
+        his.setText("Histograma");
+        his.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hisActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(160, Short.MAX_VALUE)
-                .addComponent(guardar)
-                .addGap(260, 260, 260)
-                .addComponent(salir)
-                .addGap(250, 250, 250))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(91, 91, 91)
                         .addComponent(crear)
@@ -242,13 +280,17 @@ public class vista extends javax.swing.JFrame {
                         .addComponent(selec)
                         .addGap(226, 226, 226))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(original, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editada, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(original, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(editada, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(202, 202, 202)
+                                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
                     .addComponent(jLabel1)
                     .addComponent(Bin)
                     .addComponent(B)
@@ -259,46 +301,32 @@ public class vista extends javax.swing.JFrame {
                     .addComponent(So)
                     .addComponent(G)
                     .addComponent(M)
-                    .addComponent(r)
-                    .addComponent(jLabel3)
-                    .addComponent(gr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(es, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(deri)
+                            .addComponent(jLabel5)
+                            .addComponent(es, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(gr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(r)
+                            .addComponent(la)
+                            .addComponent(can)
+                            .addComponent(tra)
+                            .addComponent(his))))
+                .addGap(22, 22, 22))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(190, 190, 190)
+                .addComponent(guardar)
+                .addGap(268, 268, 268)
+                .addComponent(salir)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Bin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(B)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(C)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Corr)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(N)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(So)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(G)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(M)
-                        .addGap(18, 18, 18)
-                        .addComponent(r)
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(gr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addGap(13, 13, 13))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -307,19 +335,67 @@ public class vista extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(original, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(33, 33, 33))
+                                .addGap(0, 275, Short.MAX_VALUE)
+                                .addComponent(r)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(1, 1, 1)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(es, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5))
+                            .addComponent(editada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(original, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addComponent(deri)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(editada, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(la)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(can))
+                            .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tra))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Bin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(B)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(C)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Corr)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(N)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(So)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(G)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(M)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(es, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(guardar)
-                    .addComponent(salir))
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(guardar))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(salir)))
+                        .addGap(40, 40, 40))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(his)
+                        .addGap(28, 28, 28))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -330,7 +406,9 @@ public class vista extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -378,12 +456,26 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(false);
             N.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             B.setEnabled(true);
             C.setEnabled(true);
             Corr.setEnabled(true);
             N.setEnabled(true);
             So.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
         setimagen(Filtros.Binarizacion(i),true);
         jSlider1.setEnabled(false);
@@ -397,12 +489,23 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(false);
             Bin.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false); 
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             B.setEnabled(true);
             C.setEnabled(true);
             Corr.setEnabled(true);
             Bin.setEnabled(true);
             So.setEnabled(true);
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
         setimagen(Filtros.Negativo(i),true);
     }//GEN-LAST:event_NActionPerformed
@@ -414,12 +517,26 @@ public class vista extends javax.swing.JFrame {
             Bin.setEnabled(false);
             N.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             B.setEnabled(true);
             C.setEnabled(true);
             Bin.setEnabled(true);
             N.setEnabled(true);
             So.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
        jSlider1.setEnabled(true);
         jSlider1.setMaximum(12);
@@ -434,12 +551,26 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(false);
             N.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false); 
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             B.setEnabled(true);
             Bin.setEnabled(true);
             Corr.setEnabled(true);
             N.setEnabled(true);
             So.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true); 
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
         jSlider1.setEnabled(true);
         jSlider1.setMinimum(0);
@@ -454,12 +585,26 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(false);
             N.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             Bin.setEnabled(true);
             C.setEnabled(true);
             Corr.setEnabled(true);
             N.setEnabled(true);
             So.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true); 
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
         jSlider1.setEnabled(true);
         jSlider1.setMinimum(-5);
@@ -514,6 +659,13 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(false);
             N.setEnabled(false);
             B.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);
+            G.setEnabled(false);
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
             //setimagen(i, true);
             //jSlider1.setEnabled(true);
             //jSlider1.setMinimum(0);
@@ -525,6 +677,13 @@ public class vista extends javax.swing.JFrame {
             Corr.setEnabled(true);
             N.setEnabled(true);
             B.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);
+            G.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }
         
     }//GEN-LAST:event_SoActionPerformed
@@ -537,6 +696,12 @@ public class vista extends javax.swing.JFrame {
             N.setEnabled(false);
             B.setEnabled(false);
             So.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false); 
+            M.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             Bin.setEnabled(true);
             C.setEnabled(true);
@@ -544,6 +709,12 @@ public class vista extends javax.swing.JFrame {
             N.setEnabled(true);
             B.setEnabled(true);
             So.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);
+            M.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }    
     }//GEN-LAST:event_GActionPerformed
 
@@ -556,6 +727,11 @@ public class vista extends javax.swing.JFrame {
             B.setEnabled(false);
             So.setEnabled(false);
             G.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);  
+            r.setEnabled(false);
+            deri.setEnabled(false);
         }else{
             Bin.setEnabled(true);
             C.setEnabled(true);
@@ -564,25 +740,17 @@ public class vista extends javax.swing.JFrame {
             B.setEnabled(true);
             So.setEnabled(true);
             G.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);  
+            r.setEnabled(true);
+            deri.setEnabled(true);
         }  
     }//GEN-LAST:event_MActionPerformed
 
     private void rActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rActionPerformed
         // TODO add your handling code here:
         if(r.isSelected()){
-            String grados=gr.getSelectedItem().toString();
-            int gra=Integer.parseInt(grados);
-            String escala=es.getSelectedItem().toString();
-            double esc=Double.parseDouble(escala);
-            i=Filtros.rotacion(i, gra,esc);
-            
-            /*String grados=gr.getSelectedItem().toString();
-            int gra=Integer.parseInt(grados);
-            String escala=es.getSelectedItem().toString();
-            double esc=Double.parseDouble(escala)
-            i=Filtros.rotaciones(i, gra,esc);*/
-            //i=Filtros.rotaciones(i,360);
-            setimagen(i,true);
             Bin.setEnabled(false);
             C.setEnabled(false);
             Corr.setEnabled(false);
@@ -591,6 +759,16 @@ public class vista extends javax.swing.JFrame {
             So.setEnabled(false);
             G.setEnabled(false);
             M.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false); 
+            deri.setEnabled(false);
+            String grados=gr.getSelectedItem().toString();
+            int gra=Integer.parseInt(grados);
+            String escala=es.getSelectedItem().toString();
+            double esc=Double.parseDouble(escala);
+            i=Filtros.rotacion(i, gra,esc);
+            setimagen(i,true);
         }else{
             Bin.setEnabled(true);
             C.setEnabled(true);
@@ -600,8 +778,147 @@ public class vista extends javax.swing.JFrame {
             So.setEnabled(true);
             G.setEnabled(true);
             M.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true); 
+            deri.setEnabled(true);
         }
     }//GEN-LAST:event_rActionPerformed
+
+    private void deriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deriActionPerformed
+        // TODO add your handling code here
+        if(deri.isSelected()){
+            Bin.setEnabled(false);
+            C.setEnabled(false);
+            Corr.setEnabled(false);
+            N.setEnabled(false);
+            B.setEnabled(false);
+            So.setEnabled(false);
+            G.setEnabled(false);
+            r.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);   
+            M.setEnabled(false);
+            setimagen(Filtros.Sobel(i),true);
+        }else{
+            Bin.setEnabled(true);
+            C.setEnabled(true);
+            Corr.setEnabled(true);
+            N.setEnabled(true);
+            B.setEnabled(true);
+            So.setEnabled(true);
+            G.setEnabled(true);
+            r.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);  
+            M.setEnabled(true);
+        }
+    }//GEN-LAST:event_deriActionPerformed
+
+    private void laActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_laActionPerformed
+        // TODO add your handling code here:
+        if(la.isSelected()){
+            Bin.setEnabled(false);
+            C.setEnabled(false);
+            Corr.setEnabled(false);
+            N.setEnabled(false);
+            B.setEnabled(false);
+            So.setEnabled(false);
+            G.setEnabled(false);
+            r.setEnabled(false);
+            deri.setEnabled(false);
+            can.setEnabled(false);
+            tra.setEnabled(false);   
+            M.setEnabled(false);
+            setimagen(Filtros.Laplace(i),true);
+        }else{
+             Bin.setEnabled(true);
+            C.setEnabled(true);
+            Corr.setEnabled(true);
+            N.setEnabled(true);
+            B.setEnabled(true);
+            So.setEnabled(true);
+            G.setEnabled(true);
+            r.setEnabled(true);
+            deri.setEnabled(true);
+            can.setEnabled(true);
+            tra.setEnabled(true);  
+            M.setEnabled(true);
+        }
+        
+    }//GEN-LAST:event_laActionPerformed
+
+    private void canActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_canActionPerformed
+        // TODO add your handling code here:
+        if(can.isSelected()){
+            Bin.setEnabled(true);
+            Bin.setEnabled(false);
+            C.setEnabled(false);
+            Corr.setEnabled(false);
+            N.setEnabled(false);
+            B.setEnabled(false);
+            So.setEnabled(false);
+            G.setEnabled(false);
+            r.setEnabled(false);
+            la.setEnabled(false);
+            deri.setEnabled(false);
+            tra.setEnabled(false);   
+            M.setEnabled(false);
+            setimagen(Filtros.Canny(i),true);
+        }else{
+            Bin.setEnabled(true);
+            C.setEnabled(true);
+            Corr.setEnabled(true);
+            N.setEnabled(true);
+            B.setEnabled(true);
+            So.setEnabled(true);
+            G.setEnabled(true);
+            r.setEnabled(true);
+            la.setEnabled(true);
+            deri.setEnabled(true);
+            tra.setEnabled(true);  
+            M.setEnabled(true);
+        }
+    }//GEN-LAST:event_canActionPerformed
+
+    private void traActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_traActionPerformed
+        // TODO add your handling code here:
+        if(tra.isSelected()){
+           Bin.setEnabled(false);
+            C.setEnabled(false);
+            Corr.setEnabled(false);
+            N.setEnabled(false);
+            B.setEnabled(false);
+            So.setEnabled(false);
+            G.setEnabled(false);
+            r.setEnabled(false);
+            la.setEnabled(false);
+            can.setEnabled(false);
+            deri.setEnabled(false);   
+            M.setEnabled(false);
+            setimagen(Filtros.transformada(i),true);
+        }else{
+            Bin.setEnabled(true);
+            C.setEnabled(true);
+            Corr.setEnabled(true);
+            N.setEnabled(true);
+            B.setEnabled(true);
+            So.setEnabled(true);
+            G.setEnabled(true);
+            r.setEnabled(true);
+            la.setEnabled(true);
+            can.setEnabled(true);
+            deri.setEnabled(true);  
+            M.setEnabled(true);
+        }
+    }//GEN-LAST:event_traActionPerformed
+
+    private void hisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hisActionPerformed
+        // TODO add your handling code here:
+        Filtros.histograma(j);
+    }//GEN-LAST:event_hisActionPerformed
 
     /**
      * @param args the command line arguments 
@@ -648,20 +965,26 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JCheckBox M;
     private javax.swing.JCheckBox N;
     private javax.swing.JCheckBox So;
+    private javax.swing.JCheckBox can;
     private javax.swing.JButton crear;
+    private javax.swing.JCheckBox deri;
     private javax.swing.JLabel editada;
     private javax.swing.JComboBox<String> es;
     private javax.swing.JComboBox<String> gr;
     private javax.swing.JButton guardar;
+    private javax.swing.JButton his;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSlider jSlider1;
+    private javax.swing.JCheckBox la;
     private javax.swing.JLabel original;
     private javax.swing.JCheckBox r;
     private javax.swing.JButton salir;
     private javax.swing.JButton selec;
+    private javax.swing.JCheckBox tra;
     // End of variables declaration//GEN-END:variables
 }

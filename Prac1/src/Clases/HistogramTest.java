@@ -60,7 +60,7 @@ public class HistogramTest extends ApplicationFrame {
         JFreeChart chart = ChartFactory.createHistogram(
             "Histogram Demo", 
             "Valores", 
-            "Porcentaje", 
+            "Frecuencias", 
             dataset, 
             PlotOrientation.VERTICAL, 
             true, 
@@ -72,7 +72,7 @@ public class HistogramTest extends ApplicationFrame {
         NumberAxis axis = (NumberAxis) plot.getDomainAxis();
         axis.setAutoRangeIncludesZero(false);
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setNumberFormatOverride(NumberFormat.getPercentInstance());        
+        rangeAxis.setNumberFormatOverride(NumberFormat.getInstance());        
         return chart;
     }
 

@@ -274,7 +274,7 @@ public class Filtros {
     public static Mat Canny (Mat image) {
         Mat canny =new Mat();
         Imgproc.cvtColor (image, canny, Imgproc.COLOR_BGR2GRAY); 
-        Imgproc.Canny (image, canny, 10, 100, 3,true); 
+        Imgproc.Canny (image, canny, 10, 100, 3,false); 
         return canny;
 
     }
